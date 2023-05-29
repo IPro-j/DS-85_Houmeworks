@@ -154,7 +154,9 @@ values	( 'The Shawshank Redemption', 1994, 2.99, 142),
 		('Forrest Gump', 1994, 2.99, 142),
 		('Schindlers List', 1993, 3.99, 195)
 
-
+--- решение специалиста
+insert into table (columnname1, columnname2)
+select unnest(array[‘name1’, ‘name2’, ‘name3’]), unnest(array[1916, 1837, 1840])
 
 --ЗАДАНИЕ №3
 --Обновите стоимость аренды фильмов в таблице film_new с учетом информации, 
@@ -182,7 +184,9 @@ values	( 'Seven samurai', 1954, 1.99, 67)
 
 select *, round((film_duration/60),1) "Длительность фильма в часах" from film_new 
 
+
 --ЗАДАНИЕ №7 
 --Удалите таблицу film_new
 
 drop table film_new 
+
