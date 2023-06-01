@@ -66,30 +66,43 @@ from payment p
 where p2.payment_date = p2.last_payment_date
 
 
- 
-
- 
-
- 
-
-Ответить
-
-
-
---======== ДОПОЛНИТЕЛЬНАЯ ЧАСТЬ ==============
+ --======== ДОПОЛНИТЕЛЬНАЯ ЧАСТЬ ==============
 
 --ЗАДАНИЕ №1
 --С помощью оконной функции выведите для каждого сотрудника сумму продаж за август 2005 года 
 --с нарастающим итогом по каждому сотруднику и по каждой дате продажи (без учёта времени) 
 --с сортировкой по дате.
 
-
+select staff_id, date_of_payment, sum(day_amount) over (partition by staff_id order by date_of_payment)  sum_amount
+from 
+(
+select p.staff_id, sum(p.amount) day_amount, p.payment_date::date date_of_payment
+from payment p 
+where   extract(year from p.payment_date) = 2005
+		and
+	 	extract(month  from p.payment_date) = 8
+group by p.staff_id, date_of_payment
+) p2
 
 
 --ЗАДАНИЕ №2
 --20 августа 2005 года в магазинах проходила акция: покупатель каждого сотого платежа получал
 --дополнительную скидку на следующую аренду. С помощью оконной функции выведите всех покупателей,
 --которые в день проведения акции получили скидку
+
+select *
+from
+(
+select p.payment_id,  p.customer_id , p.payment_date::date date_of_payment, 
+ row_number() over (order by p.payment_date) as ranking
+from payment p 
+where   extract(year from p.payment_date) = 2005
+		and
+	 	extract(month  from p.payment_date) = 8
+	 	and
+	 	extract(day  from p.payment_date) = 20
+) p2
+where mod(p2.ranking, 100) = 0
 
 
 
